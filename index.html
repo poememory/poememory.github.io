@@ -73,6 +73,82 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-video" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/12/07/video/" class="article-date">
+  <time class="dt-published" datetime="2023-12-07T08:57:47.000Z" itemprop="datePublished">2023-12-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/12/07/video/">video</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="video基础信息"><a href="#video基础信息" class="headerlink" title="video基础信息"></a>video基础信息</h2><p><code>autoplay</code>: 表示视频是否自动播放。(然而，大多数浏览器对自动播放进行了限制，特别是在没有用户交互的情况下。)</p>
+<p>buffered: 表示视频已缓冲的时间范围。</p>
+<p>controls: 表示是否显示视频控制条。</p>
+<p><code>currentTime</code>: 表示当前播放的时间。(拖动进度条修改的就是他)</p>
+<p>dataset: 返回元素的自定义数据集。</p>
+<p>defaultMuted, defaultPlaybackRate: 分别表示默认是否静音和默认播放速率。</p>
+<p>duration: 表示媒体的总播放时长。</p>
+<p>ended: 表示媒体是否已经播放结束。</p>
+<p>muted: 表示视频是否静音。</p>
+<p>paused: 表示视频是否处于暂停状态。</p>
+<p>playbackRate: 表示视频的播放速率。</p>
+<p>played: 表示已经播放的时间范围。</p>
+<p>poster: 表示视频的封面图片。</p>
+<p>preload: 规定是否在页面加载时预加载视频。</p>
+<p>看着这些属性可以干些啥？每次我都不是团员还要做qndxx，就很烦，然而那个视频进度条被隐藏了（上述controls属性），只需要输入以下就可以播放完。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> v=<span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;video&quot;</span>)</span><br><span class="line">v.<span class="property">currentTime</span>=v.<span class="property">duration</span></span><br></pre></td></tr></table></figure>
+<p>下面还有一些video的事件：</p>
+<ul>
+<li>loadstart 浏览器开始寻找指定的视频时触发</li>
+<li>durationchange 时长变化触发</li>
+<li>canplay 可播放监听</li>
+<li>pause 暂停监听</li>
+<li>timeupdate 目前的播放位置已更改时</li>
+<li>ended：播放结束</li>
+<li>volumechange：当音量更改时</li>
+<li>ratechange：当视频的播放速度已更改时</li>
+</ul>
+<p>再有，我们会发现网站为了美化界面，会自定义进度条，其实就是利用上述属性进行的封装，不同button修改对应属性。</p>
+<h2 id="canvas处理视频"><a href="#canvas处理视频" class="headerlink" title="canvas处理视频"></a>canvas处理视频</h2><p>你可能会绝对困惑，canvas跟视频怎么扯上关系了。用canvas放视频？曾经学习canvas时的我冒出过这个想法，然后觉得自己有大病。直到—-我无意间用edge在b站点了下F12，视频地方显示的是canvas标签（更奇怪的是chrome上就是好好的video标签）。</p>
+<p><strong>实现思路</strong>：<br>Canvas中可以使用<code>ctx.drawImage(video, x, y,width,height)</code>来对视频当前帧的图像进行绘制，其中video参数就是HTML5中的video标签。故我们可以通过Canvas的动态效果不断获取video当前画面，渲染到Canvas画布上。并且通过改变video标签的属性，来实现在Canvas中处理视频的一整套效果。可以理解成在Canvas中新建一个播放器，该播放器视频源是video标签创建，播放器的各种方法最终指向对video标签本身属性和方法的改变。</p>
+<p>step1:创建video标签</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建Video标签</span></span><br><span class="line">video = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;Video&#x27;</span>);</span><br><span class="line">video.<span class="property">src</span> = <span class="string">&#x27;exmaple.mp4&#x27;</span>;</span><br><span class="line">video.<span class="property">controls</span> = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//将video标签插入dom结点，用于展示原始video。</span></span><br><span class="line"><span class="comment">//首先应该在body中有一个id为videodiv的div结点。</span></span><br><span class="line"><span class="comment">//在实战中不需要插入dom结点（不用添加下面两行语句）就可以使用上面创建的video对象</span></span><br><span class="line"><span class="keyword">var</span> videodiv=<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;videodiv&#x27;</span>);</span><br><span class="line">videodiv.<span class="title function_">appendChild</span>(video);</span><br></pre></td></tr></table></figure>
+<p>step2：Canvas中不断绘制video标签内容</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">render</span>()</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">requestAnimationFrame</span>(render)</span><br><span class="line">    ctx.<span class="title function_">clearRect</span>(<span class="number">0</span>, <span class="number">0</span>,canvas.<span class="property">width</span>,canvas.<span class="property">height</span>)</span><br><span class="line">    ctx.<span class="title function_">drawImage</span>(video, <span class="number">0</span>, <span class="number">0</span>,width,height)  <span class="comment">//绘制视频</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是说现在的视频成了一张张图了。有什么用？我靠，一张张图都给到canvas上了还怎么用？想做什么交互效果都可以。动画效果类似弹幕也可以直接filltext然后更新，比在video标签上加div的动画更好。</p>
+<h2 id="结合Three-js"><a href="#结合Three-js" class="headerlink" title="结合Three.js"></a>结合Three.js</h2><p>都可以一张张放到canvas里了，那同样用canvas的three.js不是也可以用了？three.js的纹理效果应该可以实现。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> <span class="variable constant_">THREE</span> <span class="keyword">from</span> <span class="string">&#x27;three&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">OrbitControls</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;three/examples/jsm/controls/OrbitControls.js&#x27;</span>;</span><br><span class="line"><span class="comment">// 创建场景</span></span><br><span class="line"><span class="keyword">var</span> scene = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Scene</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建相机</span></span><br><span class="line"><span class="keyword">var</span> camera = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">PerspectiveCamera</span>(<span class="number">75</span>, <span class="variable language_">window</span>.<span class="property">innerWidth</span> / <span class="variable language_">window</span>.<span class="property">innerHeight</span>, <span class="number">0.1</span>, <span class="number">1000</span>);</span><br><span class="line">camera.<span class="property">position</span>.<span class="title function_">set</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 WebGL 渲染器</span></span><br><span class="line"><span class="keyword">var</span> renderer = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">WebGLRenderer</span>();</span><br><span class="line">renderer.<span class="title function_">setSize</span>(<span class="variable language_">window</span>.<span class="property">innerWidth</span>, <span class="variable language_">window</span>.<span class="property">innerHeight</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(renderer.<span class="property">domElement</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 VR 视频纹理</span></span><br><span class="line"><span class="keyword">var</span> video = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;video&#x27;</span>);</span><br><span class="line">video.<span class="property">src</span> = <span class="string">&#x27;/VID_20231125_132828.mp4&#x27;</span>;</span><br><span class="line">video.<span class="property">crossOrigin</span> = <span class="string">&#x27;anonymous&#x27;</span>; <span class="comment">// 跨域时需要设置</span></span><br><span class="line">video.<span class="property">loop</span> = <span class="literal">true</span>;</span><br><span class="line">video.<span class="title function_">play</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个 VideoTexture 对象，以便将视频作为纹理应用到 Three.js 的三维对象上</span></span><br><span class="line"><span class="keyword">var</span> videoTexture = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">VideoTexture</span>(video);</span><br><span class="line">videoTexture.<span class="property">minFilter</span> = <span class="variable constant_">THREE</span>.<span class="property">LinearFilter</span>;</span><br><span class="line">videoTexture.<span class="property">magFilter</span> = <span class="variable constant_">THREE</span>.<span class="property">LinearFilter</span>;</span><br><span class="line"><span class="comment">// 设置纹理的格式为 RGBA 格式</span></span><br><span class="line">videoTexture.<span class="property">format</span> = <span class="variable constant_">THREE</span>.<span class="property">RGBAFormat</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建立方体几何体</span></span><br><span class="line"><span class="keyword">var</span> geometry = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">BoxGeometry</span>(<span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建材质</span></span><br><span class="line"><span class="keyword">var</span> material = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">MeshBasicMaterial</span>(&#123; <span class="attr">map</span>: videoTexture, <span class="attr">side</span>: <span class="variable constant_">THREE</span>.<span class="property">DoubleSide</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建网格对象</span></span><br><span class="line"><span class="keyword">var</span> cube = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Mesh</span>(geometry, material);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将立方体添加到场景中</span></span><br><span class="line">scene.<span class="title function_">add</span>(cube);</span><br><span class="line"><span class="keyword">const</span> controls=<span class="keyword">new</span> <span class="title class_">OrbitControls</span>(camera,renderer.<span class="property">domElement</span>)</span><br><span class="line"><span class="comment">// 渲染函数</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">animate</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">requestAnimationFrame</span>(animate);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 旋转立方体</span></span><br><span class="line">    cube.<span class="property">rotation</span>.<span class="property">x</span> += <span class="number">0.01</span>;</span><br><span class="line">    cube.<span class="property">rotation</span>.<span class="property">y</span> += <span class="number">0.01</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新视频纹理</span></span><br><span class="line">    <span class="keyword">if</span> (video.<span class="property">readyState</span> === video.<span class="property">HAVE_ENOUGH_DATA</span>) &#123;</span><br><span class="line">        videoTexture.<span class="property">needsUpdate</span> = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    controls.<span class="title function_">update</span>()</span><br><span class="line">    <span class="comment">// 渲染场景</span></span><br><span class="line">    renderer.<span class="title function_">render</span>(scene, camera);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 监听窗口大小变化</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;resize&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    camera.<span class="property">aspect</span> = <span class="variable language_">window</span>.<span class="property">innerWidth</span> / <span class="variable language_">window</span>.<span class="property">innerHeight</span>;</span><br><span class="line">    camera.<span class="title function_">updateProjectionMatrix</span>();</span><br><span class="line">    renderer.<span class="title function_">setSize</span>(<span class="variable language_">window</span>.<span class="property">innerWidth</span>, <span class="variable language_">window</span>.<span class="property">innerHeight</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 开始动画</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>,<span class="function">()=&gt;</span><span class="title function_">animate</span>());</span><br><span class="line"><span class="comment">//video交互触发（否则报错）</span></span><br></pre></td></tr></table></figure>
+<p>视频可以在空间中用平面播放出来，还有基于此实现简单VR视频的方法，用将视频铺满屏幕，然后设置相机可转动角度，再设置交互。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/12/07/video/" data-id="clpy7t5cd0000zcty9wr199ei" data-title="video" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Fabric-js" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/11/04/Fabric-js/" class="article-date">
@@ -343,7 +419,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">October 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">October 2023</a></li></ul>
     </div>
   </div>
 
@@ -354,6 +430,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/12/07/video/">video</a>
+          </li>
         
           <li>
             <a href="/2023/11/04/Fabric-js/">Fabric.js</a>
