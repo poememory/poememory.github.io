@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="canvas简介canvas，顾名思义就是画布。用于绘制各种图形图片。 HTML5 canvas 元素用于图形的绘制，通过脚本 (通常是JavaScript)来完成.canvas标签只是图形容器，您必须使用脚本来绘制图形。你可以通过多种方法使用 canvas 绘制路径,盒、圆、字符以及添加图像。 特点：canvas绘制出来的图像是单纯的像素点（svg图是矢量图，也是dom元素），所画的内容与dom">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/01/24/canvas%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="canvas简介canvas，顾名思义就是画布。用于绘制各种图形图片。 HTML5 canvas 元素用于图形的绘制，通过脚本 (通常是JavaScript)来完成.canvas标签只是图形容器，您必须使用脚本来绘制图形。你可以通过多种方法使用 canvas 绘制路径,盒、圆、字符以及添加图像。 特点：canvas绘制出来的图像是单纯的像素点（svg图是矢量图，也是dom元素），所画的内容与dom">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/01/24/canvas%E5%9F%BA%E7%A1%80/canvas_drawimage.jpg">
+<meta property="article:published_time" content="2024-01-24T07:44:59.619Z">
+<meta property="article:modified_time" content="2024-01-24T07:37:29.542Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/01/24/canvas%E5%9F%BA%E7%A1%80/canvas_drawimage.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-canvas基础" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/01/24/canvas%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time class="dt-published" datetime="2024-01-24T07:44:59.619Z" itemprop="datePublished">2024-01-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="canvas简介"><a href="#canvas简介" class="headerlink" title="canvas简介"></a>canvas简介</h2><p>canvas，顾名思义就是画布。用于绘制各种图形图片。</p>
+<p>HTML5 canvas 元素用于图形的绘制，通过脚本 (通常是JavaScript)来完成.canvas标签只是图形容器，您必须使用脚本来绘制图形。<br>你可以通过多种方法使用 canvas 绘制路径,盒、圆、字符以及添加图像。</p>
+<p>特点：canvas绘制出来的图像是单纯的像素点（svg图是矢量图，也是dom元素），所画的内容与dom元素不同，canvas是一个dom元素，对其方法是对挂在canvas上对内容的操作。</p>
+<h2 id="canvas基本操作"><a href="#canvas基本操作" class="headerlink" title="canvas基本操作"></a>canvas基本操作</h2><p>由于canvas是h5新增的标签，为了防止有人用古董版本浏览器，一般会这么写，canvas出不来时就让用户升级浏览器。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">&#x27;mycanvas&#x27;</span> <span class="attr">width</span>=<span class="string">&quot;500&quot;</span> <span class="attr">height</span>=<span class="string">&quot;500&quot;</span>&gt;</span></span><br><span class="line">    当前的浏览器版本不支持，请升级浏览器</span><br><span class="line"><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span>  </span><br></pre></td></tr></table></figure>
+<p>然后就要用js对canvas进行操作，基本的画线、矩形、圆形、文字都有对应的方法，只需要弄懂其中的参数含义即可（不用背，写的时候翻一翻就可以）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 得到canvas的画布</span></span><br><span class="line"><span class="keyword">const</span> myCanvas= <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;mycanvas&quot;</span>)</span><br><span class="line"><span class="comment">// 得到画布的上下文，上下文有两个，2d的上下文和3d的上下文</span></span><br><span class="line"><span class="comment">// 所有的图像绘制都是通过ctx属性或者是方法进行设置的，和canvas标签没有关系了</span></span><br><span class="line"><span class="keyword">const</span> ctx = myCanvas.<span class="title function_">getContext</span>(<span class="string">&quot;2d&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(ctx !== <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">// 设置颜色</span></span><br><span class="line">    ctx.<span class="property">fillStyle</span> = <span class="string">&#x27;green&#x27;</span></span><br><span class="line">    <span class="comment">// 绘制矩形</span></span><br><span class="line">    ctx.<span class="title function_">fillRect</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">50</span>) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是一些具体的方法：<br>(注意：canvas中的坐标都是以左上方为原点，坐标向下向右增大)</p>
+<h4 id="绘制矩形："><a href="#绘制矩形：" class="headerlink" title="绘制矩形："></a>绘制矩形：</h4><ul>
+<li>fillRect(x, y, width, height)<br>绘制一个填充的矩形</li>
+<li>strokeRect(x, y, width, height)<br>绘制一个矩形的边框</li>
+<li>clearRect(x, y, width, height)<br>清除指定矩形区域，让清除部分完全透明。</li>
+</ul>
+<h4 id="绘制路径与笔触："><a href="#绘制路径与笔触：" class="headerlink" title="绘制路径与笔触："></a>绘制路径与笔触：</h4><p>绘制路径中我们要有一个画笔的概念，画笔有一个位置</p>
+<ul>
+<li>moveto(x,y)<br>画笔移动到某处</li>
+<li>lineTo(x, y)画一条到某处的线</li>
+<li>beginPath()<br>新建一条路径，生成之后，图形绘制命令被指向到路径上生成路径。</li>
+<li>closePath()<br>闭合路径之后图形绘制命令又重新指向到上下文中。</li>
+<li>stroke()<br>通过线条来绘制图形轮廓。</li>
+<li>fill()<br>通过填充路径的内容区域生成实心的图形。<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个画出三角形填色的例子</span></span><br><span class="line">ctx.<span class="title function_">beginPath</span>();</span><br><span class="line">    ctx.<span class="title function_">moveTo</span>(<span class="number">75</span>, <span class="number">50</span>);</span><br><span class="line">    ctx.<span class="title function_">lineTo</span>(<span class="number">100</span>, <span class="number">75</span>);</span><br><span class="line">    ctx.<span class="title function_">lineTo</span>(<span class="number">100</span>, <span class="number">25</span>);</span><br><span class="line">    ctx.<span class="title function_">fill</span>();</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="绘制颜色："><a href="#绘制颜色：" class="headerlink" title="绘制颜色："></a>绘制颜色：</h4><p>canvas中的画笔颜色修改（实际开发中容易被之前的颜色干扰，所以封装每一个绘制函数时可以再开头修改成需要的颜色）</p>
+<ul>
+<li>fillStyle &#x3D; color<br>设置图形的填充颜色。</li>
+<li>strokeStyle &#x3D; color<br>设置图形轮廓的颜色。</li>
+</ul>
+<h4 id="绘制文本："><a href="#绘制文本：" class="headerlink" title="绘制文本："></a>绘制文本：</h4><ul>
+<li>fillText(text, x, y [, maxWidth])<br>在指定的 (x,y) 位置填充指定的文本，绘制的最大宽度是可选的。</li>
+<li>strokeText(text, x, y [, maxWidth])<br>在指定的 (x,y) 位置绘制文本边框，绘制的最大宽度是可选的。</li>
+<li>文本样式：<br>font &#x3D; value<br>当前我们用来绘制文本的样式。这个字符串使用和 CSS font 属性相同的语法。默认的字体是 10px sans-serif。</li>
+</ul>
+<p>除了以上，还有渐变色、透明度、线条转边样式等。需要的时候都可以一下查到而且用起来很简单，所以不必背下来，只用知道什么是可以做的和在哪里查到就可以了。</p>
+<h3 id="图片绘制："><a href="#图片绘制：" class="headerlink" title="图片绘制："></a>图片绘制：</h3><p>这个是重点。实际开发中不可能让自己画三角形矩形圆形再填色一堆内容，更多的时候是用设计给好的图片，就是把图片画到画布上去。<br><code>drawImage</code><br>其中 image 是 image 或者 canvas 对象。<br>（注意这里的image是一个Image对象或者一个dom获取的img标签）</p>
+<p><code>drawImage</code>的参数设置有点让人晕头转向。我们一步一步来看。</p>
+<ul>
+<li><code>drawImage(image,x,y)</code>x,y是图片的坐标，图片的左上角点坐标为（x,y）,此时图片的宽高皆为其像素默认宽高</li>
+<li><code>drawImage(image, x, y, width, height)</code>这个方法多了 2 个参数：width 和 height，这两个参数用来控制 当向 canvas 画入时应该缩放的大小。此时图片的宽高为width、height。</li>
+<li><code>drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)</code><br>前 4 个是定义图像源的切片位置和大小，后 4 个则是定义切片的目标显示位置和大小。可以对照下图理解一下。<img src='canvas_drawimage.jpg'></li>
+</ul>
+<h3 id="状态保存与回复"><a href="#状态保存与回复" class="headerlink" title="状态保存与回复"></a>状态保存与回复</h3><ul>
+<li><code>save()</code><br>保存画布 (canvas) 的所有状态</li>
+<li><code>restore()</code><br>save 和 restore 方法是用来保存和恢复 canvas 状态的，都没有参数。Canvas 的状态就是当前画面应用的所有样式和变形的一个快照。</li>
+<li>你可以调用任意多次 save方法。每一次调用 restore 方法，上一个保存的状态就从栈中弹出，所有设定都恢复。</li>
+</ul>
+<h2 id="canvas实现动画"><a href="#canvas实现动画" class="headerlink" title="canvas实现动画"></a>canvas实现动画</h2><p>我们用canvas绘制了一个图形，一旦绘制成功了，canvas就像素化了他们。canvas没有能力，从画布上再次得到这个图形，也就是我们没有能力去修改已经在画布上的内容，这个就是canvas比较轻量的原因，Flash重的原因之一就有它可以通过对应的api得到已经上“画布”的内容然后再次绘制。</p>
+<p>所以我们得到了canvas的动画的流程：画-&gt;更新数据内容-&gt;清除画布内容-&gt;重新画</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置颜色</span></span><br><span class="line">ctx.<span class="property">fillStyle</span> = <span class="string">&quot;blue&quot;</span></span><br><span class="line"><span class="comment">// 初始信号量</span></span><br><span class="line"><span class="keyword">let</span> left = -<span class="number">200</span></span><br><span class="line"><span class="comment">// 动画过程</span></span><br><span class="line"><span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">   <span class="comment">// 清除画布,0,0代表从什么位置开始,600,600代表清除的宽度和高度</span></span><br><span class="line">   ctx.<span class="title function_">clearRect</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">600</span>,<span class="number">600</span>)</span><br><span class="line">   <span class="comment">// 更新信号量</span></span><br><span class="line">   left++</span><br><span class="line">   <span class="comment">// 如果已经走出画布，则更新信号量为初始位置</span></span><br><span class="line">   <span class="keyword">if</span>(left &gt; <span class="number">600</span>) &#123;</span><br><span class="line">       left = -<span class="number">200</span></span><br><span class="line">   &#125;</span><br><span class="line">   ctx.<span class="title function_">fillRect</span>(left, <span class="number">100</span>, <span class="number">200</span>, <span class="number">200</span>)</span><br><span class="line">&#125;,<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<p>看看上面这个例子，setInterval不断的调用它第一个参数函数的内容。函数中清除再更新方块的位置再渲染。</p>
+<p>setInterval间隔一段时间不断调用函数的特性让我们可以用它来重绘。当然间隔一段固定的时间也有其弊端，这个时候可以用raf动画，这里不展开说明。</p>
+<p>上面的例子中只有一个简单的图形和一个简单的left坐标，写起来很简单。但是在实际开发中，一个画布中会有很多不同的内容在动，如果为每一个内容添加其变量属性再写一堆绘制函数的话，整个代码就会先得很乱。所以我们将每一种类型的图形封装成对应的类，每一个内容是该类的对象，将该对象的数据内容存在对象中不要放在全局里，每个对象有其更新数据和绘制的方法。再在setInterval中一起调用全部对象的更新与绘制函数。</p>
+<p>如果有兴趣还可看看看下面的文章：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bleaka/p/16143470.html">https://www.cnblogs.com/bleaka/p/16143470.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/01/24/canvas%E5%9F%BA%E7%A1%80/" data-id="clrrhcshd0000psty9xn3enx6" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/12/07/video/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">video</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">October 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/01/24/canvas%E5%9F%BA%E7%A1%80/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/12/07/video/">video</a>
+          </li>
+        
+          <li>
+            <a href="/2023/11/04/Fabric-js/">Fabric.js</a>
+          </li>
+        
+          <li>
+            <a href="/2023/10/18/JS%E4%BA%8B%E4%BB%B6%E6%B5%81/">JS事件流</a>
+          </li>
+        
+          <li>
+            <a href="/2023/10/16/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
