@@ -73,86 +73,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-canvas基础" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/01/24/canvas%E5%9F%BA%E7%A1%80/" class="article-date">
-  <time class="dt-published" datetime="2024-01-24T07:44:59.619Z" itemprop="datePublished">2024-01-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="canvas简介"><a href="#canvas简介" class="headerlink" title="canvas简介"></a>canvas简介</h2><p>canvas，顾名思义就是画布。用于绘制各种图形图片。</p>
-<p>HTML5 canvas 元素用于图形的绘制，通过脚本 (通常是JavaScript)来完成.canvas标签只是图形容器，您必须使用脚本来绘制图形。<br>你可以通过多种方法使用 canvas 绘制路径,盒、圆、字符以及添加图像。</p>
-<p>特点：canvas绘制出来的图像是单纯的像素点（svg图是矢量图，也是dom元素），所画的内容与dom元素不同，canvas是一个dom元素，对其方法是对挂在canvas上对内容的操作。</p>
-<h2 id="canvas基本操作"><a href="#canvas基本操作" class="headerlink" title="canvas基本操作"></a>canvas基本操作</h2><p>由于canvas是h5新增的标签，为了防止有人用古董版本浏览器，一般会这么写，canvas出不来时就让用户升级浏览器。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">&#x27;mycanvas&#x27;</span> <span class="attr">width</span>=<span class="string">&quot;500&quot;</span> <span class="attr">height</span>=<span class="string">&quot;500&quot;</span>&gt;</span></span><br><span class="line">    当前的浏览器版本不支持，请升级浏览器</span><br><span class="line"><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span>  </span><br></pre></td></tr></table></figure>
-<p>然后就要用js对canvas进行操作，基本的画线、矩形、圆形、文字都有对应的方法，只需要弄懂其中的参数含义即可（不用背，写的时候翻一翻就可以）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 得到canvas的画布</span></span><br><span class="line"><span class="keyword">const</span> myCanvas= <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;mycanvas&quot;</span>)</span><br><span class="line"><span class="comment">// 得到画布的上下文，上下文有两个，2d的上下文和3d的上下文</span></span><br><span class="line"><span class="comment">// 所有的图像绘制都是通过ctx属性或者是方法进行设置的，和canvas标签没有关系了</span></span><br><span class="line"><span class="keyword">const</span> ctx = myCanvas.<span class="title function_">getContext</span>(<span class="string">&quot;2d&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(ctx !== <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">// 设置颜色</span></span><br><span class="line">    ctx.<span class="property">fillStyle</span> = <span class="string">&#x27;green&#x27;</span></span><br><span class="line">    <span class="comment">// 绘制矩形</span></span><br><span class="line">    ctx.<span class="title function_">fillRect</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">50</span>) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面是一些具体的方法：<br>(注意：canvas中的坐标都是以左上方为原点，坐标向下向右增大)</p>
-<h4 id="绘制矩形："><a href="#绘制矩形：" class="headerlink" title="绘制矩形："></a>绘制矩形：</h4><ul>
-<li>fillRect(x, y, width, height)<br>绘制一个填充的矩形</li>
-<li>strokeRect(x, y, width, height)<br>绘制一个矩形的边框</li>
-<li>clearRect(x, y, width, height)<br>清除指定矩形区域，让清除部分完全透明。</li>
-</ul>
-<h4 id="绘制路径与笔触："><a href="#绘制路径与笔触：" class="headerlink" title="绘制路径与笔触："></a>绘制路径与笔触：</h4><p>绘制路径中我们要有一个画笔的概念，画笔有一个位置</p>
-<ul>
-<li>moveto(x,y)<br>画笔移动到某处</li>
-<li>lineTo(x, y)画一条到某处的线</li>
-<li>beginPath()<br>新建一条路径，生成之后，图形绘制命令被指向到路径上生成路径。</li>
-<li>closePath()<br>闭合路径之后图形绘制命令又重新指向到上下文中。</li>
-<li>stroke()<br>通过线条来绘制图形轮廓。</li>
-<li>fill()<br>通过填充路径的内容区域生成实心的图形。<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个画出三角形填色的例子</span></span><br><span class="line">ctx.<span class="title function_">beginPath</span>();</span><br><span class="line">    ctx.<span class="title function_">moveTo</span>(<span class="number">75</span>, <span class="number">50</span>);</span><br><span class="line">    ctx.<span class="title function_">lineTo</span>(<span class="number">100</span>, <span class="number">75</span>);</span><br><span class="line">    ctx.<span class="title function_">lineTo</span>(<span class="number">100</span>, <span class="number">25</span>);</span><br><span class="line">    ctx.<span class="title function_">fill</span>();</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="绘制颜色："><a href="#绘制颜色：" class="headerlink" title="绘制颜色："></a>绘制颜色：</h4><p>canvas中的画笔颜色修改（实际开发中容易被之前的颜色干扰，所以封装每一个绘制函数时可以再开头修改成需要的颜色）</p>
-<ul>
-<li>fillStyle &#x3D; color<br>设置图形的填充颜色。</li>
-<li>strokeStyle &#x3D; color<br>设置图形轮廓的颜色。</li>
-</ul>
-<h4 id="绘制文本："><a href="#绘制文本：" class="headerlink" title="绘制文本："></a>绘制文本：</h4><ul>
-<li>fillText(text, x, y [, maxWidth])<br>在指定的 (x,y) 位置填充指定的文本，绘制的最大宽度是可选的。</li>
-<li>strokeText(text, x, y [, maxWidth])<br>在指定的 (x,y) 位置绘制文本边框，绘制的最大宽度是可选的。</li>
-<li>文本样式：<br>font &#x3D; value<br>当前我们用来绘制文本的样式。这个字符串使用和 CSS font 属性相同的语法。默认的字体是 10px sans-serif。</li>
-</ul>
-<p>除了以上，还有渐变色、透明度、线条转边样式等。需要的时候都可以一下查到而且用起来很简单，所以不必背下来，只用知道什么是可以做的和在哪里查到就可以了。</p>
-<h3 id="图片绘制："><a href="#图片绘制：" class="headerlink" title="图片绘制："></a>图片绘制：</h3><p>这个是重点。实际开发中不可能让自己画三角形矩形圆形再填色一堆内容，更多的时候是用设计给好的图片，就是把图片画到画布上去。<br><code>drawImage</code><br>其中 image 是 image 或者 canvas 对象。<br>（注意这里的image是一个Image对象或者一个dom获取的img标签）</p>
-<p><code>drawImage</code>的参数设置有点让人晕头转向。我们一步一步来看。</p>
-<ul>
-<li><code>drawImage(image,x,y)</code>x,y是图片的坐标，图片的左上角点坐标为（x,y）,此时图片的宽高皆为其像素默认宽高</li>
-<li><code>drawImage(image, x, y, width, height)</code>这个方法多了 2 个参数：width 和 height，这两个参数用来控制 当向 canvas 画入时应该缩放的大小。此时图片的宽高为width、height。</li>
-<li><code>drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)</code><br>前 4 个是定义图像源的切片位置和大小，后 4 个则是定义切片的目标显示位置和大小。可以对照下图理解一下。<img src='canvas_drawimage.jpg'></li>
-</ul>
-<h3 id="状态保存与回复"><a href="#状态保存与回复" class="headerlink" title="状态保存与回复"></a>状态保存与回复</h3><ul>
-<li><code>save()</code><br>保存画布 (canvas) 的所有状态</li>
-<li><code>restore()</code><br>save 和 restore 方法是用来保存和恢复 canvas 状态的，都没有参数。Canvas 的状态就是当前画面应用的所有样式和变形的一个快照。</li>
-<li>你可以调用任意多次 save方法。每一次调用 restore 方法，上一个保存的状态就从栈中弹出，所有设定都恢复。</li>
-</ul>
-<h2 id="canvas实现动画"><a href="#canvas实现动画" class="headerlink" title="canvas实现动画"></a>canvas实现动画</h2><p>我们用canvas绘制了一个图形，一旦绘制成功了，canvas就像素化了他们。canvas没有能力，从画布上再次得到这个图形，也就是我们没有能力去修改已经在画布上的内容，这个就是canvas比较轻量的原因，Flash重的原因之一就有它可以通过对应的api得到已经上“画布”的内容然后再次绘制。</p>
-<p>所以我们得到了canvas的动画的流程：画-&gt;更新数据内容-&gt;清除画布内容-&gt;重新画</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置颜色</span></span><br><span class="line">ctx.<span class="property">fillStyle</span> = <span class="string">&quot;blue&quot;</span></span><br><span class="line"><span class="comment">// 初始信号量</span></span><br><span class="line"><span class="keyword">let</span> left = -<span class="number">200</span></span><br><span class="line"><span class="comment">// 动画过程</span></span><br><span class="line"><span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">   <span class="comment">// 清除画布,0,0代表从什么位置开始,600,600代表清除的宽度和高度</span></span><br><span class="line">   ctx.<span class="title function_">clearRect</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">600</span>,<span class="number">600</span>)</span><br><span class="line">   <span class="comment">// 更新信号量</span></span><br><span class="line">   left++</span><br><span class="line">   <span class="comment">// 如果已经走出画布，则更新信号量为初始位置</span></span><br><span class="line">   <span class="keyword">if</span>(left &gt; <span class="number">600</span>) &#123;</span><br><span class="line">       left = -<span class="number">200</span></span><br><span class="line">   &#125;</span><br><span class="line">   ctx.<span class="title function_">fillRect</span>(left, <span class="number">100</span>, <span class="number">200</span>, <span class="number">200</span>)</span><br><span class="line">&#125;,<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-<p>看看上面这个例子，setInterval不断的调用它第一个参数函数的内容。函数中清除再更新方块的位置再渲染。</p>
-<p>setInterval间隔一段时间不断调用函数的特性让我们可以用它来重绘。当然间隔一段固定的时间也有其弊端，这个时候可以用raf动画，这里不展开说明。</p>
-<p>上面的例子中只有一个简单的图形和一个简单的left坐标，写起来很简单。但是在实际开发中，一个画布中会有很多不同的内容在动，如果为每一个内容添加其变量属性再写一堆绘制函数的话，整个代码就会先得很乱。所以我们将每一种类型的图形封装成对应的类，每一个内容是该类的对象，将该对象的数据内容存在对象中不要放在全局里，每个对象有其更新数据和绘制的方法。再在setInterval中一起调用全部对象的更新与绘制函数。</p>
-<p>如果有兴趣还可看看看下面的文章：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bleaka/p/16143470.html">https://www.cnblogs.com/bleaka/p/16143470.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/01/24/canvas%E5%9F%BA%E7%A1%80/" data-id="clrrhcshd0000psty9xn3enx6" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-video" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/12/07/video/" class="article-date">
@@ -175,20 +95,36 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="video基础信息"><a href="#video基础信息" class="headerlink" title="video基础信息"></a>video基础信息</h2><p><code>autoplay</code>: 表示视频是否自动播放。(然而，大多数浏览器对自动播放进行了限制，特别是在没有用户交互的情况下。)</p>
-<p>buffered: 表示视频已缓冲的时间范围。</p>
-<p>controls: 表示是否显示视频控制条。</p>
-<p><code>currentTime</code>: 表示当前播放的时间。(拖动进度条修改的就是他)</p>
-<p>dataset: 返回元素的自定义数据集。</p>
-<p>defaultMuted, defaultPlaybackRate: 分别表示默认是否静音和默认播放速率。</p>
-<p>duration: 表示媒体的总播放时长。</p>
-<p>ended: 表示媒体是否已经播放结束。</p>
-<p>muted: 表示视频是否静音。</p>
-<p>paused: 表示视频是否处于暂停状态。</p>
-<p>playbackRate: 表示视频的播放速率。</p>
-<p>played: 表示已经播放的时间范围。</p>
-<p>poster: 表示视频的封面图片。</p>
-<p>preload: 规定是否在页面加载时预加载视频。</p>
+        <h2 id="video标签"><a href="#video标签" class="headerlink" title="video标签"></a>video标签</h2><ul>
+<li><p><code>autoplay</code>: 表示视频是否自动播放。(然而，大多数浏览器对自动播放进行了限制，特别是在没有用户交互的情况下。)</p>
+</li>
+<li><p>buffered: 表示视频已缓冲的时间范围。</p>
+</li>
+<li><p>controls: 表示是否显示视频控制条。</p>
+</li>
+<li><p><code>currentTime</code>: 表示当前播放的时间。(拖动进度条修改的就是他)</p>
+</li>
+<li><p>dataset: 返回元素的自定义数据集。</p>
+</li>
+<li><p>defaultMuted, defaultPlaybackRate: 分别表示默认是否静音和默认播放速率。</p>
+</li>
+<li><p>duration: 表示媒体的总播放时长。</p>
+</li>
+<li><p>ended: 表示媒体是否已经播放结束。</p>
+</li>
+<li><p>muted: 表示视频是否静音。</p>
+</li>
+<li><p>paused: 表示视频是否处于暂停状态。</p>
+</li>
+<li><p>playbackRate: 表示视频的播放速率。</p>
+</li>
+<li><p>played: 表示已经播放的时间范围。</p>
+</li>
+<li><p>poster: 表示视频的封面图片。</p>
+</li>
+<li><p>preload: 规定是否在页面加载时预加载视频。</p>
+</li>
+</ul>
 <p>看着这些属性可以干些啥？每次我都不是团员还要做qndxx，就很烦，然而那个视频进度条被隐藏了（上述controls属性），只需要输入以下就可以播放完。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> v=<span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;video&quot;</span>)</span><br><span class="line">v.<span class="property">currentTime</span>=v.<span class="property">duration</span></span><br></pre></td></tr></table></figure>
 <p>下面还有一些video的事件：</p>
@@ -203,16 +139,17 @@
 <li>ratechange：当视频的播放速度已更改时</li>
 </ul>
 <p>再有，我们会发现网站为了美化界面，会自定义进度条，其实就是利用上述属性进行的封装，不同button修改对应属性。</p>
-<h2 id="canvas处理视频"><a href="#canvas处理视频" class="headerlink" title="canvas处理视频"></a>canvas处理视频</h2><p>你可能会绝对困惑，canvas跟视频怎么扯上关系了。用canvas放视频？曾经学习canvas时的我冒出过这个想法，然后觉得自己有大病。直到—-我无意间用edge在b站点了下F12，视频地方显示的是canvas标签（更奇怪的是chrome上就是好好的video标签）。</p>
+<h2 id="canvas处理视频"><a href="#canvas处理视频" class="headerlink" title="canvas处理视频"></a>canvas处理视频</h2><p>你可能会绝对困惑，canvas跟视频怎么扯上关系了。用canvas放视频？曾经学习canvas时的我冒出过这个想法，然后觉得自己有大病，好好的视频放到canvas上干啥。直到—-我无意间用edge在b站点了下F12，视频地方显示的居然是canvas标签（更奇怪的是chrome上就是好好的video标签）。</p>
 <p><strong>实现思路</strong>：<br>Canvas中可以使用<code>ctx.drawImage(video, x, y,width,height)</code>来对视频当前帧的图像进行绘制，其中video参数就是HTML5中的video标签。故我们可以通过Canvas的动态效果不断获取video当前画面，渲染到Canvas画布上。并且通过改变video标签的属性，来实现在Canvas中处理视频的一整套效果。可以理解成在Canvas中新建一个播放器，该播放器视频源是video标签创建，播放器的各种方法最终指向对video标签本身属性和方法的改变。</p>
 <p>step1:创建video标签</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建Video标签</span></span><br><span class="line">video = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;Video&#x27;</span>);</span><br><span class="line">video.<span class="property">src</span> = <span class="string">&#x27;exmaple.mp4&#x27;</span>;</span><br><span class="line">video.<span class="property">controls</span> = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//将video标签插入dom结点，用于展示原始video。</span></span><br><span class="line"><span class="comment">//首先应该在body中有一个id为videodiv的div结点。</span></span><br><span class="line"><span class="comment">//在实战中不需要插入dom结点（不用添加下面两行语句）就可以使用上面创建的video对象</span></span><br><span class="line"><span class="keyword">var</span> videodiv=<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;videodiv&#x27;</span>);</span><br><span class="line">videodiv.<span class="title function_">appendChild</span>(video);</span><br></pre></td></tr></table></figure>
 <p>step2：Canvas中不断绘制video标签内容</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">render</span>()</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">requestAnimationFrame</span>(render)</span><br><span class="line">    ctx.<span class="title function_">clearRect</span>(<span class="number">0</span>, <span class="number">0</span>,canvas.<span class="property">width</span>,canvas.<span class="property">height</span>)</span><br><span class="line">    ctx.<span class="title function_">drawImage</span>(video, <span class="number">0</span>, <span class="number">0</span>,width,height)  <span class="comment">//绘制视频</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>就是说现在的视频成了一张张图了。有什么用？我靠，一张张图都给到canvas上了还怎么用？想做什么交互效果都可以。动画效果类似弹幕也可以直接filltext然后更新，比在video标签上加div的动画更好。</p>
+<p>就是说现在的视频成了一张张图了。有什么用？我靠，一张张图都给到canvas上了还怎么用？想做什么交互效果都可以。动画效果类似弹幕也可以直接filltext然后更新，比在video标签上加div的动画更好。还能直接修改图片内容，对应出来就是修改是视频内容。</p>
 <h2 id="结合Three-js"><a href="#结合Three-js" class="headerlink" title="结合Three.js"></a>结合Three.js</h2><p>都可以一张张放到canvas里了，那同样用canvas的three.js不是也可以用了？three.js的纹理效果应该可以实现。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> <span class="variable constant_">THREE</span> <span class="keyword">from</span> <span class="string">&#x27;three&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">OrbitControls</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;three/examples/jsm/controls/OrbitControls.js&#x27;</span>;</span><br><span class="line"><span class="comment">// 创建场景</span></span><br><span class="line"><span class="keyword">var</span> scene = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Scene</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建相机</span></span><br><span class="line"><span class="keyword">var</span> camera = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">PerspectiveCamera</span>(<span class="number">75</span>, <span class="variable language_">window</span>.<span class="property">innerWidth</span> / <span class="variable language_">window</span>.<span class="property">innerHeight</span>, <span class="number">0.1</span>, <span class="number">1000</span>);</span><br><span class="line">camera.<span class="property">position</span>.<span class="title function_">set</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 WebGL 渲染器</span></span><br><span class="line"><span class="keyword">var</span> renderer = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">WebGLRenderer</span>();</span><br><span class="line">renderer.<span class="title function_">setSize</span>(<span class="variable language_">window</span>.<span class="property">innerWidth</span>, <span class="variable language_">window</span>.<span class="property">innerHeight</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(renderer.<span class="property">domElement</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 VR 视频纹理</span></span><br><span class="line"><span class="keyword">var</span> video = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;video&#x27;</span>);</span><br><span class="line">video.<span class="property">src</span> = <span class="string">&#x27;/VID_20231125_132828.mp4&#x27;</span>;</span><br><span class="line">video.<span class="property">crossOrigin</span> = <span class="string">&#x27;anonymous&#x27;</span>; <span class="comment">// 跨域时需要设置</span></span><br><span class="line">video.<span class="property">loop</span> = <span class="literal">true</span>;</span><br><span class="line">video.<span class="title function_">play</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个 VideoTexture 对象，以便将视频作为纹理应用到 Three.js 的三维对象上</span></span><br><span class="line"><span class="keyword">var</span> videoTexture = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">VideoTexture</span>(video);</span><br><span class="line">videoTexture.<span class="property">minFilter</span> = <span class="variable constant_">THREE</span>.<span class="property">LinearFilter</span>;</span><br><span class="line">videoTexture.<span class="property">magFilter</span> = <span class="variable constant_">THREE</span>.<span class="property">LinearFilter</span>;</span><br><span class="line"><span class="comment">// 设置纹理的格式为 RGBA 格式</span></span><br><span class="line">videoTexture.<span class="property">format</span> = <span class="variable constant_">THREE</span>.<span class="property">RGBAFormat</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建立方体几何体</span></span><br><span class="line"><span class="keyword">var</span> geometry = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">BoxGeometry</span>(<span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建材质</span></span><br><span class="line"><span class="keyword">var</span> material = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">MeshBasicMaterial</span>(&#123; <span class="attr">map</span>: videoTexture, <span class="attr">side</span>: <span class="variable constant_">THREE</span>.<span class="property">DoubleSide</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建网格对象</span></span><br><span class="line"><span class="keyword">var</span> cube = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Mesh</span>(geometry, material);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将立方体添加到场景中</span></span><br><span class="line">scene.<span class="title function_">add</span>(cube);</span><br><span class="line"><span class="keyword">const</span> controls=<span class="keyword">new</span> <span class="title class_">OrbitControls</span>(camera,renderer.<span class="property">domElement</span>)</span><br><span class="line"><span class="comment">// 渲染函数</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">animate</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">requestAnimationFrame</span>(animate);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 旋转立方体</span></span><br><span class="line">    cube.<span class="property">rotation</span>.<span class="property">x</span> += <span class="number">0.01</span>;</span><br><span class="line">    cube.<span class="property">rotation</span>.<span class="property">y</span> += <span class="number">0.01</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新视频纹理</span></span><br><span class="line">    <span class="keyword">if</span> (video.<span class="property">readyState</span> === video.<span class="property">HAVE_ENOUGH_DATA</span>) &#123;</span><br><span class="line">        videoTexture.<span class="property">needsUpdate</span> = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    controls.<span class="title function_">update</span>()</span><br><span class="line">    <span class="comment">// 渲染场景</span></span><br><span class="line">    renderer.<span class="title function_">render</span>(scene, camera);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 监听窗口大小变化</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;resize&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    camera.<span class="property">aspect</span> = <span class="variable language_">window</span>.<span class="property">innerWidth</span> / <span class="variable language_">window</span>.<span class="property">innerHeight</span>;</span><br><span class="line">    camera.<span class="title function_">updateProjectionMatrix</span>();</span><br><span class="line">    renderer.<span class="title function_">setSize</span>(<span class="variable language_">window</span>.<span class="property">innerWidth</span>, <span class="variable language_">window</span>.<span class="property">innerHeight</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 开始动画</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>,<span class="function">()=&gt;</span><span class="title function_">animate</span>());</span><br><span class="line"><span class="comment">//video交互触发（否则报错）</span></span><br></pre></td></tr></table></figure>
 <p>视频可以在空间中用平面播放出来，还有基于此实现简单VR视频的方法，用将视频铺满屏幕，然后设置相机可转动角度，再设置交互。</p>
+<p>有兴趣可以看看这三个例子的仓库 <a target="_blank" rel="noopener" href="https://github.com/poememory/three.js-learing/tree/main/videoTest">https://github.com/poememory/three.js-learing/tree/main/videoTest</a></p>
 
       
     </div>
@@ -499,7 +436,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/01/">January 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">October 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">October 2023</a></li></ul>
     </div>
   </div>
 
@@ -510,10 +447,6 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2024/01/24/canvas%E5%9F%BA%E7%A1%80/">(no title)</a>
-          </li>
         
           <li>
             <a href="/2023/12/07/video/">video</a>
