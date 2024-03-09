@@ -73,6 +73,86 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-node.js事件循环" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/node.js%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T11:48:20.703Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="node-js事件循环"><a href="#node-js事件循环" class="headerlink" title="node.js事件循环"></a>node.js事件循环</h1><p>知周所众，我们JavaScript代码运行是单线程的。既然是单线程语言，当有任务进入队列时就需要排队等待。但是有些任务耗时太久了，如果等它执行完在执行后面的任务就很不爽（想象一下你排队打饭的前面的人要回去拿饭卡再来，你等他吗？）。因此我们js被设计出可以异步执行的语言。</p>
+<p>任务可以分为同步任务和异步任务。同步任务无需多言，从上到下执行就ook了 ，异步任务怎么个异步法就是我们今天要讲的事件循环了。</p>
+<h2 id="浏览器中的事件循环"><a href="#浏览器中的事件循环" class="headerlink" title="浏览器中的事件循环"></a>浏览器中的事件循环</h2><p>老登们应该还记得刘总之前分享过浏览器的事件循环，得到了乐神的点名表扬。那我们就先回顾一下吧。</p>
+<p>先看几个概念</p>
+<ul>
+<li>任务队列包含微任务和宏任务</li>
+<li>宏任务：主要包含事件绑定、计时器、网络请求的回调</li>
+<li>微任务：主要包含Promise、async中的await后的语句</li>
+</ul>
+<p>运行流程：</p>
+<ol>
+<li>代码从上至下运行，将对应的宏任务和微任务放到其队列中</li>
+<li>执行同步任务</li>
+<li>执行微任务队列中的任务，直至微任务队列为空。执行中产生的新任务添加到对应宏&#x2F;微任务队列中。</li>
+<li>取出一个宏任务队列中的任务执行。执行完判断微任务队列是否有任务，有则回到第3步没有则继续取出一个宏任务执行。</li>
+</ol>
+<p>看看下面这个输出什么吧</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">2</span>);</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">3</span>);</span><br><span class="line">        &#125;, <span class="number">0</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">4</span>);</span><br><span class="line">    &#125;,<span class="number">0</span>)</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;promise&#x27;</span>);&#125;)</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">5</span>);</span><br><span class="line">    <span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">6</span>);</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">7</span>);</span><br><span class="line">        &#125;, <span class="number">0</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">8</span>);</span><br><span class="line">    &#125;,<span class="number">0</span>)</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>入队后，宏任务中有两个大settimeout的回调。微任务中有promise的then语句。先执行微任务，<strong>输出“promise”</strong>，再执行第一个大settimeout的回调，<strong>输出1</strong>，将promise的then语句放入微任务，再将输出4的settimeout回调推入宏任务队列。此时第一个大settimeout的回调执行完毕，执行微任务，<strong>输出2</strong>，将输出3的settimeout回调推入宏任务队列。此时宏任务队列中还有第二个大settimeout的回调和前面进入的输出4、3的回调。执行第二个大settimeout的回调，<strong>输出5</strong>，将promise的then语句放入微任务，再将输出8的settimeout回调推入宏任务队列。此时第一个大settimeout的回调执行完毕，执行微任务，<strong>输出6</strong>，将输出7的settimeout回调推入宏任务队列。最后<strong>输出4387</strong></p>
+<p>可以发现每次微任务为空才执行宏任务，所以下一次执行的微任务都是由刚刚执行的宏任务产生的。</p>
+<h2 id="node-js中的事件循环"><a href="#node-js中的事件循环" class="headerlink" title="node.js中的事件循环"></a>node.js中的事件循环</h2><p>上边我们描述了在浏览器中一次事件循环 EventLoop 的执行过程，接下来我们趁热打铁来看看在 NodeJs 中所谓的事件循环是如何执行的。</p>
+<p>在这之前我们先来看看node.js中有哪些与浏览器不同的API吧</p>
+<ul>
+<li><code>process.nextTick</code>：执行时机即是在同步任务执行完毕后，即将微任务推入栈中时优先会将 process.nextTick 推入栈中进行执行。</li>
+<li><code>setImmediate</code>:它意为当要异步地（但要尽可能快）执行某些代码，类似于 <code>setTimeout(()=&gt; &#123;&#125;,0)</code></li>
+</ul>
+<p>node.js事件循环的六个阶段：</p>
+<ol>
+<li>timers：在 timers 阶段会执行已经被 setTimeout() 和 setInterval() 的调度回调函数。</li>
+<li>pending callbacks：上一次循环队列中，还未执行完毕的会在这个阶段进行执行。比如延迟到下一个 Loop 之中的 I&#x2F;O 操作。</li>
+<li>idle, prepare：其实这一步我们不需要过多的关系，它仅仅是在 NodeJs 内部调用。我们无法进行操作这一步，所以我们知道它存在就行。</li>
+<li>poll：被称为轮询阶段，它主要会检测新的 I&#x2F;O 相关的回调，需要注意的是这一阶段会存在阻塞（也就意味着这之后的阶段可能不会被执行）。也是最重要的阶段</li>
+<li>check：会检测 setImmediate() 回调函数在这个阶段进行执行。</li>
+<li>close callbacks：会执行一系列关闭的回调函数，比如如：socket.on(‘close’, …)。了解即可。</li>
+</ol>
+<p>poll阶段会处理大部分的回调函数，poll执行完所有的回调函数过后</p>
+<ul>
+<li>如果轮询队列不是空的 ，事件循环将循环访问回调队列并同步执行它们，直到队列已用尽，或者达到了与系统相关的硬性限制。 </li>
+<li>如果轮询队列是空的 ，还有两件事发生： 如果脚本被 setImmediate() 调度，则事件循环将结束 poll(轮询) 阶段，并继续 check(检查) 阶段以执行那些被调度的脚本。如果脚本 未被 setImmediate()调度，则事件循环将等待回调被添加到队列中，然后立即执行。</li>
+<li>注意poll空闲时会检查定时器是否到达，如果到达则按顺序进入timers阶段</li>
+</ul>
+<h3 id="setTimerout-setImmediate-谁快？"><a href="#setTimerout-setImmediate-谁快？" class="headerlink" title="setTimerout &amp; setImmediate 谁快？"></a>setTimerout &amp; setImmediate 谁快？</h3><p>跑一跑下面的代码，看看结果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;timer&#x27;</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">setImmediate</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;immediate&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>哇，这按流程不就是timer阶段执行输出，再check阶段输出，根本毫无悬念啊。</p>
+<p>但是结果可能让你失望了，一段相同的代码造成的执行结果是完全不同的，有时竟然先执行了所谓的 immediate 之后才会输出 timer 。</p>
+<p>为什么呢？首先我们要知道setTimeout一般取不到0，至少都是1。而执行上述代码以及进入事件循环是需要事件的。如果我们的电脑性能足够好，在1ms内执行完了这些，进入timer时，setTimeout 并没有达到对应的时间，其对应的回调也不会执行，故先执行immediate。反之1ms内未执行完，进入timer时则会执行回调，先输出timer。</p>
+<p>Q:那怎么保证setimmediate先于setTimeout执行呢？</p>
+<h3 id="process-nextTick"><a href="#process-nextTick" class="headerlink" title="process.nextTick"></a>process.nextTick</h3><p>process.nextTick严格来说不是node事件循环的一部分。它非常霸道，直接是插入到任务中的头部执行(注意也不是立即执行)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"></span><br><span class="line">fs.<span class="title function_">readFile</span>(path.<span class="title function_">resolve</span>(__dirname, <span class="string">&#x27;package.json&#x27;</span>), <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;&#125;</span><br><span class="line">  process.<span class="title function_">nextTick</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;process&#x27;</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">fs.<span class="title function_">readFile</span>(path.<span class="title function_">resolve</span>(__dirname, <span class="string">&#x27;package.json&#x27;</span>), <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;&#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">2</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>虽然它并不是 EventLoop 中的一部分。但是我们完全可以将它理解成为 微任务。这两者在执行过程中是完全等价的，我们可以简单将 process.nextTick 理解成为拥有最高优先级的微任务。对应上面所说，process.nextTick插入到队列头部。当前宏任务执行完后，立即执行的就是process.nextTick的回调。</p>
+<p>当然我们上述中描述的 EventLoop 中的 6个步骤都是相对于宏任务的讲述的。微任务还是原来的promise</p>
+<p>node的本质和浏览器中是类似的，虽然 NodeJs 下存在多个执行队列，但是每次执行逻辑是相同的：同样是执行完成一个宏任务后会立即清空当前队列中产生的所有微任务。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/node.js%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" data-id="cltk6sr3x0000u0tygmbqekjx" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-video" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/12/07/video/" class="article-date">
@@ -436,7 +516,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">October 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">December 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/10/">October 2023</a></li></ul>
     </div>
   </div>
 
@@ -447,6 +527,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/03/09/node.js%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/">(no title)</a>
+          </li>
         
           <li>
             <a href="/2023/12/07/video/">video</a>
